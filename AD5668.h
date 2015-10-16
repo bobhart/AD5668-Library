@@ -1,5 +1,5 @@
 /*
-  AD5668.h, version 1.0, written by Robert Hart, October 12, 2015
+  AD5668.h, version 1.1, written by Robert Hart, October 15, 2015
 
   This library implements both hardware-SPI and software SPI constructors.
 
@@ -14,15 +14,15 @@
   specifically in the structure of the writeDAC and init functions, as well as
   the use of a command definition list. This library impliments all of the
   command functions of the chip, and allows for tying the ~LDAC pin to ground.
-  When tying ~LDAC to ground, DO NOT use the toggleLDAC function. Also, use of
-  the toggleDAC function is only needed in conjuction with command function
+  When tying ~LDAC to ground, DO NOT use the toggleLDAC function. Also, use of the
+  toggleDAC function is probably only needed in conjuction with command function
   writeChannel (chip command 0). For a full explanation of the various functions,
   refer to the readme file and the examples.
 
-  The AD5668 library is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, version 3 of the License, which should be included
-  in this distribution. If not, see <http://www.gnu.org/licenses/>.
+  The AD5668 library is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the Free
+  Software Foundation, version 3 of the License, which should be included in this
+  this distribution. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef AD5668_h
@@ -47,55 +47,49 @@ class AD5668 {
   public:
 
   // Hardware SPI Constructor
-  AD5668(int ssPin, int clrPin, int ldacPin = -1);
+  AD5668(uint8_t ssPin, uint8_t clrPin, int8_t ldacPin = -1);
 
   // Software SPI constructor
-  AD5668(int mosiPin, int sclkPin, int ssPin, int clrPin, int ldacPin = -1);
+  AD5668(uint8_t mosiPin, uint8_t sclkPin, uint8_t ssPin, uint8_t clrPin, int8_t ldacPin = -1);
 
-  /* Initialize the DAC
-     vRegBit turns internal voltage reference on (1) or leaves it off (0)
-     channelsN specifies which channels to power up normal, the value is a
-     number representing the 8 channel bits A - H, i.e. power up channels
-      A - D = 15, 255 = all channels. Can be in form BXXXXXXXX, i.e.
-      B01010101 = channels A, C, E, G on, B11111111 all on.
-  */
-  void init(int vRegBit, int channelsN);
+  // Initialize the DAC
+  void init();
 
   // Write data for output value to DAC channel N input register
-  void writeChannel(byte channel, unsigned int value);
+  void writeChannel(uint8_t channel, unsigned int value);
 
   // Move a value in channel N input register out
-  void updateChannel(byte channel);
+  void updateChannel(uint8_t channel);
 
   // Write an output value to channel N and update all (software ~LDAC)
-  void writeChUpdateAll(byte channel, unsigned int value);
+  void writeChUpdateAll(uint8_t channel, unsigned int value);
 
   // Write and update an output value out of channel N
-  void writeUpdateCh(byte channel, unsigned int value);
+  void writeUpdateCh(uint8_t channel, unsigned int value);
 
   // Power up DAC channels normal operation
-  void powerDAC_Normal(int channelsN);
+  void powerDAC_Normal(uint8_t channelsN);
 
   // Power down DAC channels modes
 
   //Power down DAC channels to 1KOhm to GND state
-  void powerDAC_Down1K(int channelsN);
+  void powerDAC_Down1K(uint8_t channelsN);
 
   //Power down DAC channels to 100KOhm to GND state
-  void powerDAC_Down100K(int channelsN);
+  void powerDAC_Down100K(uint8_t channelsN);
 
   //Power down DAC channels to Tri-state
-  void powerDAC_DownTri(int channelsN);
+  void powerDAC_DownTri(uint8_t channelsN);
 
   /* Clear Code Register Mode values:
    0 clears to 0x0000 (zero scale) = 0 volts out
    1 clears to 0x8000 (mid-scale) = half scale voltage out
    2 clears to 0xFFFF (full scale) = full voltage out
    3 clears to no operation (ignores ~clr pin) */
-  void setClearCode(int clearCode);
+  void setClearCode(uint8_t clearCode);
 
   // Set bits for the ~LDAC Register
-  void setSoftLDAC(int channelsN);
+  void setSoftLDAC(uint8_t channelsN);
 
   // Reset the DAC
   void reset();
@@ -110,9 +104,10 @@ class AD5668 {
   void toggleLDAC();
 
   private:
-  void writeDAC(byte command, byte address, unsigned int data, byte function);
+  void writeDAC(uint8_t command, uint8_t address, unsigned int data, uint8_t function);
   boolean  _hwSPI;
-  int _mosiPin, _sclkPin, _ssPin, _ldacPin, _clrPin, _vRegBit, _channel, _channelsN, _clearCode;
+  uint8_t _mosiPin, _sclkPin, _ssPin, _clrPin, _channel, _channelsN, _clearCode;
+  int8_t _ldacPin;
   unsigned int _value;
 };
 #endif
