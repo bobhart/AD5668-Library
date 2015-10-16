@@ -1,0 +1,22 @@
+Version 1.0: 
+  First public release. 
+
+Version 1.1:
+  Included suggestions from Rob Tillaart to change most variables from type int to type 
+    uint8_t to save memory, optimize the writeDAC function by removing an OR from the 
+    line that builds variable b1, use a simple shift right 4 for b3, remove a shift from 
+    and add a mask to the line that builds b4, and consolidate code in the init() function. 
+    
+  This version also has a major change to the init() function in that it no longer sets 
+    the internal reference voltage or selected channels to the Power Up Normal state.
+    Instead, it only initializes the communication pins (and bit order for SPI) and toggles 
+    the ~CLR pin. This was changed due to the fact that the chip can be set to any number 
+    of startup conditions depending on the needs of the implementation. Therefore, the user 
+    should make use of a combination of the powerDAC, setClearCode, setSoftLDAC, and 
+    enableInternalRef functions in the sketch's setup function to set the chip to a desired 
+    start-up state. See the supplied examples. 
+    
+  Also fixed a major error in the powerDAC_Normal, powerDAC_Down1K, powerDAC_Down100K, 
+    powerDAC_DownTri and setSoftLDAC functions (was B00001111 | _channelsN, should have
+    been an B00001111 & _channelsN), cleaned up some other minor errors in the code, corrected 
+    errors in the keywords.txt file, and cleaned up mispellings in this file. 
