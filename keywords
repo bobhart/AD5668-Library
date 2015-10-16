@@ -24,6 +24,6 @@ powerDAC_DownTri	KEYWORD2
 setClearCode	KEYWORD2
 setSoftLDAC	KEYWORD2
 reset	KEYWORD2
-enable_internal_ref	KEYWORD2
-disable_internal_ref	KEYWORD2
+enableInternalRef	KEYWORD2
+disableInternalRef	KEYWORD2
 toggleLDAC	KEYWORD2
