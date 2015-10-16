@@ -14,9 +14,22 @@
  Monitor after uploading to see the results. This sketch
  assumes that the vRef pin is connected to an external
  reference.
- 
- Bob Hart, October 2, 2015
- ********************************************************/
+
+      **********************************************
+      *                                            *
+      * WARNING FOR DUE AND OTHER 3.3V CONTROLLERS *
+      *                                            *
+      **********************************************
+
+ Do NOT connect the output of these chips to the analog
+ inputs of any of the 3.3V uControllers, like the DUE, if
+ using a reference voltage higher than 3.3V for the DAC.
+ Applying voltages higher than 3.3V to these inputs will
+ probably damage the inputs and may distroy the board.U
+
+ Bob Hart, October 16, 2015
+********************************************************/
+
 #include "AD5668.h"
 #include <SPI.h>
 
@@ -37,7 +50,7 @@ int dacFOut = 0;
 int dacGOut = 0;
 int dacHOut = 0;
 
-/* 
+/*
  *  Hardware SPI instance, "AD5668(ssPin, clrPin, ldacPin);"
  *  ssPin is connected to AD5668 ~SYNC pin (pin 2), clrPin is connected to
  *  AD5668 ~CLR pin (9) and ldacPin is connected to AD5668 ~LDAC pin (1).
@@ -46,7 +59,7 @@ int dacHOut = 0;
  */
 AD5668 DAC = AD5668(ssPin, clrPin, ldacPin);
 
-/* 
+/*
  *  Software SPI instance, "AD5668(mosiPin, sclkPin ,ssPin, clrPin, ldacPin);"
  *  mosiPin is connected to AD5668 Din pin (15) and sclkPin to AD5668 SCK
  *  pin (16). Remaining connections as explained above.
@@ -55,8 +68,13 @@ AD5668 DAC = AD5668(ssPin, clrPin, ldacPin);
 
 void setup() {
   Serial.begin(9600);
+
   // initialize the DAC
-  DAC.init(0, B11111111); //initialize DAC with internal vRef off, power up all
+  DAC.init();
+
+    //DAC.enableInternalRef(); // Uncomment this line to turn on the internal reference.
+  DAC.powerDAC_Normal(B11111111); // Power up all channels normal
+
   DAC.setSoftLDAC(B00001111);
   showOutput();
   delay(5000);
@@ -71,7 +89,7 @@ void setup() {
 }
 
 void loop() {
-  
+
 }
 
 void showOutput() {
@@ -100,4 +118,3 @@ void showOutput() {
   Serial.print("Channel H = ");
   Serial.println(dacHOut);
 }
-
