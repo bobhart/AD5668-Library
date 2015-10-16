@@ -8,16 +8,29 @@
  the ~LDAC pin. The values written cycle from 0V to the
  reference voltage in 1/5 VRef increments. The sequence
  repeats a second time, but demonstrates writing to all
- channels at once using address 0b1111 (15}.
+ channels at once using address 0b1111 (15).
 
  Any one of the outputs can be monitored through the
  Serial Monitor by connecting it to A0. The result in the
  Monitor will be the 10-bit ADC value of the voltage.
  Conversely, you can directly measure the results with a
  voltmeter.
- 
- Bob Hart, October 2, 2015
- ********************************************************/
+
+     **********************************************
+     *                                            *
+     * WARNING FOR DUE AND OTHER 3.3V CONTROLLERS *
+     *                                            *
+     **********************************************
+
+ Do NOT connect the output of these chips to the analog
+ inputs of any of the 3.3V uControllers, like the DUE, if
+ using a reference voltage higher than 3.3V for the DAC.
+ Applying voltages higher than 3.3V to these inputs will
+ probably damage the inputs and may distroy the board.
+
+ Bob Hart, October 16, 2015
+********************************************************/
+
 #include "AD5668.h"
 #include <SPI.h>
 
@@ -27,7 +40,7 @@ int analogPin = A0;
 int dacOut = 0;
 unsigned int vOut = 0;
 
-/* 
+/*
  *  Hardware SPI instance, "AD5668(ssPin, clrPin, ldacPin);"
  *  ssPin is connected to AD5668 ~SYNC pin (pin 2), clrPin is connected to
  *  AD5668 ~CLR pin (9) and ldacPin is connected to AD5668 ~LDAC pin (1).
@@ -36,7 +49,7 @@ unsigned int vOut = 0;
  */
 AD5668 DAC = AD5668(7, 8, 9);
 
-/* 
+/*
  *  Software SPI instance, "AD5668(mosiPin, sclkPin ,ssPin, clrPin, ldacPin);"
  *  mosiPin is connected to AD5668 Din pin (15) and sclkPin to AD5668 SCK
  *  pin (16). Remaining connections as explained above.
@@ -45,8 +58,12 @@ AD5668 DAC = AD5668(7, 8, 9);
 
 void setup() {
   Serial.begin(9600);
+
   // initialize the DAC
-  DAC.init(0, B11111111); //initialize DAC with internal vRef off, power up all
+  DAC.init();
+
+  //DAC.enableInternalRef(); // Uncomment this line to turn on the internal reference.
+  DAC.powerDAC_Normal(B11111111); // Power up all channels normal
 }
 
 void loop() {
