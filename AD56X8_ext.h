@@ -1,12 +1,12 @@
 /*
-  AD5668.h, version 1.1, written by Robert Hart, October 15, 2015
+  ADD5668_ext.h, version 1.1, written by Robert Hart, October 15, 2015
 
   This library implements both hardware-SPI and software SPI constructors.
 
-  This is an Arduino library for the Analog Devices AD5668 16-bit, 8 Channel
+  This is an Arduino library for the Analog Devices ADD5668_ext 16-bit, 8 Channel
   Digital-to-Analog converter chip. It should also be usable with the Texas
   Instruments DAC8568, a pin and command compatible part. However, to maintain
-  full compatibility with the AD5668, this library does not impliment the
+  full compatibility with the ADD5668_ext, this library does not impliment the
   "Flexible Mode" internal reference command write sequences of the DAC8568
   (0b1001).
 
@@ -19,16 +19,16 @@
   writeChannel (chip command 0). For a full explanation of the various functions,
   refer to the readme file and the examples.
 
-  The AD5668 library is free software: you can redistribute it and/or modify it
+  The ADD5668_ext library is free software: you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published by the Free
   Software Foundation, version 3 of the License, which should be included in this
   this distribution. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AD5668_h
-#define AD5668_h
+#ifndef AD5668_ext_h
+#define AD5668_ext_h
 
-#include "arduino.h"
+#include <Arduino.h>
 
 // Command definition list
 #define WRITE_INPUT_REGISTER 0
@@ -43,14 +43,11 @@
 
 #include <SPI.h>
 
-class AD5668 {
+class AD5668_ext {
   public:
 
   // Hardware SPI Constructor
-  AD5668(uint8_t ssPin, uint8_t clrPin, int8_t ldacPin = -1);
-
-  // Software SPI constructor
-  AD5668(uint8_t mosiPin, uint8_t sclkPin, uint8_t ssPin, uint8_t clrPin, int8_t ldacPin = -1);
+  AD5668_ext(uint8_t ssPin, uint8_t clrPin, int8_t ldacPin = -1);
 
   // Initialize the DAC
   void init();
